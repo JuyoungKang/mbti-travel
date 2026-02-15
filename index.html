@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTI 여행지 추천</title>
+    <style>
+        body {
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+        input {
+            width: 80%;
+            padding: 12px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            text-transform: uppercase; /* 입력 시 자동으로 대문자로 보임 */
+            text-align: center;
+        }
+        button {
+            width: 90%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            display: none; /* 결과가 없을 땐 숨김 */
+        }
+        #resultTitle {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            white-space: pre-line;
+        }
+        #resultReason {
+            font-size: 0.95rem;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+        #resultImg {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>✈️ MBTI 여행지 추천</h2>
+        <p>당신의 MBTI를 입력해주세요.</p>
+        
+        <!-- 입력 필드 -->
+        <input type="text" id="mbtiInput" placeholder="예: ENFP" maxlength="4">
+        
+        <!-- 확인 버튼 -->
+        <button onclick="recommendTravel()">여행지 확인하기</button>
+        
+        <!-- 결과 출력 영역 -->
+        <div id="result">
+            <div id="resultTitle"></div>
+            <div id="resultReason"></div>
+            <img id="resultImg" src="" alt="여행지 이미지">
+        </div>
+    </div>
+
+    <script>
+        function recommendTravel() {
+            // 1. 입력값 가져오기 및 전처리 (공백 제거, 대문자 변환)
+            const inputElement = document.getElementById('mbtiInput');
+            const resultElement = document.getElementById('result');
+            const titleElement = document.getElementById('resultTitle');
+            const reasonElement = document.getElementById('resultReason');
+            const imgElement = document.getElementById('resultImg');
+            
+            // 파이썬의 .strip().upper()와 동일
+            const mbti = inputElement.value.trim().toUpperCase();
+
+            // 결과창 초기화 및 표시 설정
+            resultElement.style.display = "block";
+
+            // 2. 유효성 검사 (길이 체크)
+            if (mbti.length !== 4) {
+                resultElement.className = "error";
+                titleElement.innerText = "입력 오류입니다.\nMBTI는 4글자여야 합니다.";
+                reasonElement.innerText = "";
+                imgElement.style.display = "none";
+                return;
+            }
+
+            // 3. 인덱싱 및 조건문 분기
+            const first = mbti[0];  // E 또는 I
+            const fourth = mbti[3]; // P 또는 J
+            
+            let title = "";
+            let reason = "";
+            let imgUrl = "";
+
+            // 파이썬 로직과 동일한 조건문
+            if (first === 'E' && fourth === 'P') {
+                title = "추천: 도시형 액티비티 여행\n(도쿄/뉴욕/홍콩)";
+                reason = "에너지가 넘치고 즉흥적인 당신! 끊임없이 새로운 자극이 있는 화려한 도시가 딱이에요.";
+                imgUrl = "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80";
+            } else if (first === 'E' && fourth === 'J') {
+                title = "추천: 페스티벌·이벤트 중심 여행\n(오사카/런던)";
+                reason = "계획적이면서도 사람들과 어울리기를 좋아하는 당신! 축제와 이벤트가 가득한 곳으로 떠나보세요.";
+                imgUrl = "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&q=80";
+            } else if (first === 'I' && fourth === 'P') {
+                title = "추천: 자연 힐링 여행\n(제주/발리/하와이)";
+                reason = "자유로운 영혼이지만 혼자만의 시간도 중요하죠. 아름다운 자연 속에서 힐링하세요.";
+                imgUrl = "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80";
+            } else if (first === 'I' && fourth === 'J') {
+                title = "추천: 조용한 문화·정돈된 여행\n(교토/취리히/헬싱키)";
+                reason = "조용하고 질서 있는 분위기를 선호하는 당신에게는 깊이 있는 문화 유산이 있는 곳이 좋습니다.";
+                imgUrl = "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80";
+            } else {
+                title = "추천: 취향 탐색형 여행\n(국내 소도시)";
+                reason = "자신만의 취향을 찾아 떠나는 소소하고 감성적인 여행이 어울립니다.";
+                imgUrl = "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=600&q=80";
+            }
+
+            // 4. 결과 출력
+            resultElement.className = "success";
+            titleElement.innerText = title;
+            reasonElement.innerText = reason;
+            imgElement.src = imgUrl;
+            imgElement.style.display = "block";
+        }
+
+        // 엔터키 입력 시 버튼 클릭과 동일하게 동작
+        document.getElementById("mbtiInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                recommendTravel();
+            }
+        });
+    </script>
+</body>
+</html>
